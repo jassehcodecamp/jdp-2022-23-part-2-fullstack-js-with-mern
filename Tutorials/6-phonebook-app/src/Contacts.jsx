@@ -8,24 +8,8 @@ const INITIAL_CONTACT = {
   address: "",
   phone: "",
 }
-const Contacts = () => {
+const Contacts = ({ contacts, setContacts }) => {
   const [isOpen, setIsOpen] = React.useState(false)
-  const [contacts, setContacts] = React.useState([
-    {
-      id: 1,
-      name: "Ahmad Jabbi",
-      email: "ahamdjabbi@jcc.com",
-      phone: 5114157,
-      address: "Busumbala",
-    },
-    {
-      id: 2,
-      name: "Musa Keita",
-      email: "musakeita@jcc.com",
-      phone: 7711257,
-      address: "Manjai",
-    },
-  ])
 
   const [contact, setContact] = React.useState(INITIAL_CONTACT)
 
@@ -69,6 +53,17 @@ const Contacts = () => {
 
     nextContacts[contactIndex] = contact
 
+    setContacts(nextContacts)
+    setIsOpen(false)
+  }
+
+  const deleteContact = (index) => {
+    // const nextContacts = [...contacts]
+    // nextContacts.splice(index, 1)
+
+    const nextContacts = contacts.filter(
+      (contact, contactIndex) => contactIndex !== index
+    )
     setContacts(nextContacts)
     setIsOpen(false)
   }
@@ -168,6 +163,7 @@ const Contacts = () => {
         handleChangeContact={handleChangeContact}
         handleSubmit={handleSubmit}
         editContact={editContact}
+        deleteContact={deleteContact}
       />
     </div>
   )

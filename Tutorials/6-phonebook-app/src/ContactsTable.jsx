@@ -1,12 +1,6 @@
 import React from "react"
 
-const ContactsTable = ({
-  contacts,
-  isOpen,
-  setIsOpen,
-  currentContact,
-  editContact,
-}) => {
+const ContactsTable = ({ contacts, deleteContact, editContact }) => {
   return (
     <>
       <div className="mt-8 bg-white">
@@ -23,6 +17,15 @@ const ContactsTable = ({
             </thead>
 
             <tbody className="text-gray-500 divide-y divide-gray-200 bg-white">
+              {!contacts.length && (
+                <tr>
+                  <td colSpan={5}>
+                    <div className="py-16 px-10 text-gray-400 text-sm flex items-center justify-center">
+                      No Contacts!
+                    </div>
+                  </td>
+                </tr>
+              )}
               {contacts.map((contact, index) => {
                 return (
                   <tr key={contact.id}>
@@ -39,7 +42,11 @@ const ContactsTable = ({
                         >
                           Edit
                         </button>
-                        <button type="button" className="text-red-500">
+                        <button
+                          onClick={() => deleteContact(index)}
+                          type="button"
+                          className="text-red-500"
+                        >
                           Delete
                         </button>
                       </div>
