@@ -1,0 +1,36 @@
+.date-wrapper {
+  display: flex;
+  column-gap: 1rem;
+  border-bottom: 1px solid;
+  padding-bottom: 2rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group input {
+  width: 10rem;
+  padding: 6px 0.5rem;
+  margin-top: 0.3rem;
+  font-family: inherit;
+  font-size: 32px;
+}
+
+.age {
+  display: flex;
+  column-gap: 0.5rem;
+}
+
+.button {
+}
+
+.button__primary {
+}
+
+.button-icon {
+}
+
+.button-icon__spin {
+}

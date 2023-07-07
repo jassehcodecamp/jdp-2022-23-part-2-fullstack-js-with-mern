@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Friend Requests App</title>
+
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&display=swap");
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --shadow-color: 0deg 0% 63%;
+        --shadow-elevation-low: 0px 1px 1.1px hsl(var(--shadow-color) / 0.34),
+          0px 1.7px 1.9px -1.2px hsl(var(--shadow-color) / 0.34),
+          0px 4px 4.5px -2.5px hsl(var(--shadow-color) / 0.34);
+        --shadow-elevation-medium: 0px 1px 1.1px hsl(var(--shadow-color) / 0.36),
+          0px 3.3px 3.7px -0.8px hsl(var(--shadow-color) / 0.36),
+          0px 8.2px 9.2px -1.7px hsl(var(--shadow-color) / 0.36),
+          0px 20px 22.5px -2.5px hsl(var(--shadow-color) / 0.36);
+        --shadow-elevation-high: 0px 1px 1.1px hsl(var(--shadow-color) / 0.34),
+          0px 5.8px 6.5px -0.4px hsl(var(--shadow-color) / 0.34),
+          0px 10.9px 12.3px -0.7px hsl(var(--shadow-color) / 0.34),
+          0px 17.9px 20.1px -1.1px hsl(var(--shadow-color) / 0.34),
+          -0.1px 28.6px 32.2px -1.4px hsl(var(--shadow-color) / 0.34),
+          -0.1px 44.7px 50.3px -1.8px hsl(var(--shadow-color) / 0.34),
+          -0.1px 67.9px 76.4px -2.1px hsl(var(--shadow-color) / 0.34),
+          -0.2px 100px 112.5px -2.5px hsl(var(--shadow-color) / 0.34);
+      }
+
+      body {
+        color: rgb(75 85 99);
+        font-size: 15px;
+        font-family: "Inter", sans-serif;
+      }
+
+      a {
+        text-decoration: none;
+        color: inherit;
+        font-size: inherit;
+      }
+      main {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+      .card {
+        margin: auto;
+        max-width: 500px;
+        width: 100%;
+        padding: 40px 35px;
+        border-radius: 8px;
+        box-shadow: var(--shadow-elevation-medium);
+      }
+
+      .card-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 2.5rem;
+      }
+
+      .user-details {
+        display: flex;
+        align-items: center;
+        column-gap: 1rem;
+      }
+      .avatar {
+        width: 65px;
+        height: 65px;
+        border-radius: 50%;
+      }
+
+      .freind-request-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .freind-request-wrapper + .freind-request-wrapper {
+        margin-top: 35px;
+      }
+      .friend-name,
+      .mutual-friends {
+        font-weight: 600;
+      }
+      button {
+        padding: 0.5rem 1.15rem;
+        font-size: 15px;
+        font-family: inherit;
+        font-weight: 500;
+        color: rgb(107 114 128);
+        border: none;
+        border-radius: 3px;
+        box-shadow: var(--shadow-elevation-low);
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="card">
+        <div class="card-header">
+          <h3>Friend Requests</h3>
+          <a href="/">View All</a>
+        </div>
+
+        <div class="card-body">
+          <div class="freind-request-wrapper">
+            <div class="user-details">
+              <img
+                class="avatar"
+                src="./profile-photos/omar_sallah.jpg"
+                alt="Omar' Profile Photo"
+              />
+              <div>
+                <p class="friend-name">Omar Sallah</p>
+                <p><span class="mutual-friends">5</span> mutal friends</p>
+              </div>
+            </div>
+
+            <div>
+              <button>Confirm</button>
+            </div>
+          </div>
+          <div class="freind-request-wrapper">
+            <div class="user-details">
+              <img
+                class="avatar"
+                src="./profile-photos/omar_sallah.jpg"
+                alt="Omar' Profile Photo"
+              />
+              <div>
+                <p class="friend-name">Omar Sallah</p>
+                <p><span class="mutual-friends">5</span> mutal friends</p>
+              </div>
+            </div>
+
+            <div>
+              <button>Confirm</button>
+            </div>
+          </div>
+          <div class="freind-request-wrapper">
+            <div class="user-details">
+              <img
+                class="avatar"
+                src="./profile-photos/omar_sallah.jpg"
+                alt="Omar' Profile Photo"
+              />
+              <div>
+                <p class="friend-name">Omar Sallah</p>
+                <p><span class="mutual-friends">1</span> mutal friend</p>
+              </div>
+            </div>
+
+            <div>
+              <button>Confirm</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script>
+      const friendRequests = [
+        {
+          name: "Buba Conteh",
+          mutual_friends: 10,
+          profile_photo: "",
+        },
+        {
+          name: "Mam Fatou Drammeh",
+          mutual_friends: 7,
+          profile_photo: "",
+        },
+        {
+          name: "Musa Keita",
+          mutual_friends: 11,
+          profile_photo: "",
+        },
+        {
+          name: "Omar Jasseh",
+          mutual_friends: 5,
+          profile_photo: "",
+        },
+      ]
+    </script>
+  </body>
+</html>
