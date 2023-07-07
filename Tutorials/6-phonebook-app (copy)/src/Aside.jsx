@@ -1,9 +1,4 @@
-import React from "react"
-import { ContactContext } from "./App"
-
-const Aside = () => {
-  const { contacts } = React.useContext(ContactContext)
-
+export const Aside = ({ contacts }) => {
   const allContacts = contacts.length
   const favoriteContacts = contacts.filter((contact) => contact.favorite).length
   const family = contacts.filter((contact) => contact.group === "family").length
@@ -45,5 +40,3 @@ const Aside = () => {
     </aside>
   )
 }
-
-export default Aside

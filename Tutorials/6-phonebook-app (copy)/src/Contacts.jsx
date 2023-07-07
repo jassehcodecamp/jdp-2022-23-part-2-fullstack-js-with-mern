@@ -1,7 +1,6 @@
 import React from "react"
 import ContactsTable from "./ContactsTable"
 import Modal from "./Modal"
-import { ContactContext } from "./App"
 
 const INITIAL_CONTACT = {
   name: "",
@@ -9,10 +8,7 @@ const INITIAL_CONTACT = {
   address: "",
   phone: "",
 }
-const Contacts = () => {
-  const { contacts, setContacts, createNewContact, updateContact } =
-    React.useContext(ContactContext)
-
+const Contacts = ({ contacts, setContacts }) => {
   const [isOpen, setIsOpen] = React.useState(false)
 
   const [contact, setContact] = React.useState(INITIAL_CONTACT)
@@ -34,10 +30,31 @@ const Contacts = () => {
   const handleSubmit = (event) => {
     event.preventDefault()
     if (contact.id) {
-      updateContact(contact.id, contact, () => setIsOpen(false))
+      updateContact(contact.id, contact)
     } else {
-      createNewContact(contact, () => setIsOpen(false))
+      createNewContact(contact)
     }
+  }
+
+  const createNewContact = () => {
+    const id = crypto.randomUUID()
+    console.log(id)
+    const nextContacts = [...contacts]
+    nextContacts.unshift({ ...contact, id })
+
+    setContacts(nextContacts)
+    setIsOpen(false)
+  }
+  const updateContact = (id, contact) => {
+    const contactIndex = contacts.findIndex((contact) => contact.id === id)
+    let nextContacts = [...contacts]
+
+    // nextContacts.splice(contactIndex, 1, contact);
+
+    nextContacts[contactIndex] = contact
+
+    setContacts(nextContacts)
+    setIsOpen(false)
   }
 
   const deleteContact = (index) => {
@@ -141,6 +158,7 @@ const Contacts = () => {
         </form>
       </Modal>
       <ContactsTable
+        contacts={contacts}
         updateContact={updateContact}
         handleChangeContact={handleChangeContact}
         handleSubmit={handleSubmit}

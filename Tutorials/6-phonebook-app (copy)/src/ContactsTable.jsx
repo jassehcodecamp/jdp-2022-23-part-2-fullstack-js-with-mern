@@ -1,8 +1,6 @@
 import React from "react"
-import { ContactContext } from "./App"
 
-const ContactsTable = ({ deleteContact, editContact }) => {
-  const { contacts } = React.useContext(ContactContext)
+const ContactsTable = ({ contacts, deleteContact, editContact }) => {
   return (
     <>
       <div className="mt-8 bg-white">
