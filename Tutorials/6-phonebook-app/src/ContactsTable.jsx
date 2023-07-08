@@ -1,5 +1,5 @@
 import React from "react"
-import { ContactContext } from "./App"
+import { ContactContext } from "./ContactContextProvider"
 
 const ContactsTable = ({ deleteContact, editContact }) => {
   const { contacts } = React.useContext(ContactContext)

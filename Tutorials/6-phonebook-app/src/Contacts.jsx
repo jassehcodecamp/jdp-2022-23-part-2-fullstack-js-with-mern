@@ -1,7 +1,7 @@
 import React from "react"
 import ContactsTable from "./ContactsTable"
 import Modal from "./Modal"
-import { ContactContext } from "./App"
+import { ContactContext } from "./ContactContextProvider"
 
 const INITIAL_CONTACT = {
   name: "",
