@@ -1,10 +1,42 @@
 import React from "react"
 import { ContactContext } from "./ContactContextProvider"
 
-const ContactsTable = ({ deleteContact, editContact }) => {
-  const { contacts } = React.useContext(ContactContext)
+import Modal from "./Modal"
+
+const ContactsTable = ({ editContact }) => {
+  const { contacts, deleteContact, currentContact, setCurrentContact } =
+    React.useContext(ContactContext)
+
+  const [showDeleteDialog, setShowDeleteDialog] = React.useState(false)
+
   return (
     <>
+      <Modal
+        title="Delete Contact"
+        isOpen={showDeleteDialog}
+        setIsOpen={setShowDeleteDialog}
+      >
+        <p className="text-gray-500">
+          Are you sure you want to delete the Contact with name{" "}
+          <strong className="text-red-600 font-semibold">
+            {currentContact.name}
+          </strong>
+        </p>
+        <div className="mt-6 flex justify-end items-center gap-x-3">
+          <button
+            className="py-3 px-4 rounded text-gray-500 bg-gray-100"
+            onClick={() => setShowDeleteDialog(false)}
+          >
+            No, Cancel
+          </button>
+          <button
+            className="py-3 px-4 bg-red-100 text-red-500 rounded"
+            onClick={() => deleteContact(() => setShowDeleteDialog(false))}
+          >
+            Yes, Continue
+          </button>
+        </div>
+      </Modal>
       <div className="mt-8 bg-white">
         <div className="shadow-md rounded-lg overflow-hidden">
           <table className="w-full">
@@ -45,7 +77,10 @@ const ContactsTable = ({ deleteContact, editContact }) => {
                           Edit
                         </button>
                         <button
-                          onClick={() => deleteContact(index)}
+                          onClick={() => {
+                            setShowDeleteDialog(true)
+                            setCurrentContact(contact)
+                          }}
                           type="button"
                           className="text-red-500"
                         >

@@ -2,45 +2,20 @@ import React from "react"
 
 export const ContactContext = React.createContext()
 
+export const INITIAL_CONTACT = {
+  name: "",
+  email: "",
+  address: "",
+  phone: "",
+}
+
+import useLocalStorage from "./hooks/use-local-storage"
+
 const ContactContextProvider = ({ children }) => {
-  const [contacts, setContacts] = React.useState([
-    {
-      id: 1,
-      name: "Ahmad Jabbi",
-      email: "ahamdjabbi@jcc.com",
-      phone: 5114157,
-      address: "Busumbala",
-      favorite: true,
-      group: "",
-    },
-    {
-      id: 2,
-      name: "Musa Keita",
-      email: "musakeita@jcc.com",
-      phone: 7711257,
-      address: "Manjai",
-      favorite: true,
-      group: "colleague",
-    },
-    {
-      id: 3,
-      name: "Mam Fatou Drammeh",
-      email: "mamfatoud@jcc.com",
-      phone: 7711257,
-      address: "Banjul",
-      favorite: false,
-      group: "colleague",
-    },
-    {
-      id: 4,
-      name: "Eliyasu Jallow",
-      email: "eliyasuj@jcc.com",
-      phone: 7711257,
-      address: "Sinchu Alagie",
-      favorite: false,
-      group: "",
-    },
-  ])
+  const [currentContact, setCurrentContact] = React.useState(INITIAL_CONTACT)
+
+  // const [contacts, setContacts] = React.useState(fetchContacts)
+  const [contacts, setContacts] = useLocalStorage("key")
 
   const createNewContact = (contact, callback) => {
     const id = crypto.randomUUID()
@@ -61,9 +36,27 @@ const ContactContextProvider = ({ children }) => {
     setContacts(nextContacts)
     callback()
   }
+
+  const deleteContact = (callback = null) => {
+    const nextContacts = contacts.filter(
+      (contact) => contact.id !== currentContact.id
+    )
+    setContacts(nextContacts)
+
+    // callback?.()
+    if (callback) callback()
+  }
   return (
     <ContactContext.Provider
-      value={{ contacts, setContacts, createNewContact, updateContact }}
+      value={{
+        currentContact,
+        setCurrentContact,
+        contacts,
+        setContacts,
+        createNewContact,
+        updateContact,
+        deleteContact,
+      }}
     >
       {children}
     </ContactContext.Provider>

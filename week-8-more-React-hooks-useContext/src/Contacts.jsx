@@ -1,58 +1,44 @@
 import React from "react"
 import ContactsTable from "./ContactsTable"
 import Modal from "./Modal"
-import { ContactContext } from "./ContactContextProvider"
+import { ContactContext, INITIAL_CONTACT } from "./ContactContextProvider"
 
-const INITIAL_CONTACT = {
-  name: "",
-  email: "",
-  address: "",
-  phone: "",
-}
 const Contacts = () => {
-  const { contacts, setContacts, createNewContact, updateContact } =
-    React.useContext(ContactContext)
+  const {
+    contacts,
+    createNewContact,
+    updateContact,
+    currentContact,
+    setCurrentContact,
+  } = React.useContext(ContactContext)
 
   const [isOpen, setIsOpen] = React.useState(false)
-
-  const [contact, setContact] = React.useState(INITIAL_CONTACT)
 
   const editContact = (contactIndex) => {
     // const contact = contacts.find((contact) => contact.id === contactId)
     const nextContact = contacts[contactIndex]
-    setContact({ ...nextContact })
+    setCurrentContact({ ...nextContact })
     setIsOpen(true)
   }
 
   const handleChangeContact = (event) => {
-    const nextContact = { ...contact }
+    const nextContact = { ...currentContact }
     nextContact[event.target.name] = event.target.value
 
-    setContact(nextContact)
+    setCurrentContact(nextContact)
   }
 
   const handleSubmit = (event) => {
     event.preventDefault()
-    if (contact.id) {
-      updateContact(contact.id, contact, () => setIsOpen(false))
+    if (currentContact.id) {
+      updateContact(currentContact.id, currentContact, () => setIsOpen(false))
     } else {
-      createNewContact(contact, () => setIsOpen(false))
+      createNewContact(currentContact, () => setIsOpen(false))
     }
   }
 
-  const deleteContact = (index) => {
-    // const nextContacts = [...contacts]
-    // nextContacts.splice(index, 1)
-
-    const nextContacts = contacts.filter(
-      (contact, contactIndex) => contactIndex !== index
-    )
-    setContacts(nextContacts)
-    setIsOpen(false)
-  }
-
   const createContact = () => {
-    setContact(INITIAL_CONTACT)
+    setCurrentContact(INITIAL_CONTACT)
 
     setIsOpen(true)
   }
@@ -68,7 +54,7 @@ const Contacts = () => {
         </button>
       </div>
       <Modal
-        title={`${contact.id ? "Edit" : "Create"} Contact`}
+        title={`${currentContact.id ? "Edit" : "Create"} Contact`}
         isOpen={isOpen}
         setIsOpen={setIsOpen}
       >
@@ -82,7 +68,7 @@ const Contacts = () => {
                 type="text"
                 name="name"
                 id="name"
-                value={contact.name}
+                value={currentContact.name}
                 onChange={handleChangeContact}
                 className="block w-full border border-gray-400 rounded leading-7 py-2.5 px-4"
               />
@@ -92,7 +78,7 @@ const Contacts = () => {
                 Phone
               </label>
               <input
-                value={contact.phone}
+                value={currentContact.phone}
                 onChange={handleChangeContact}
                 type="text"
                 name="phone"
@@ -105,7 +91,7 @@ const Contacts = () => {
                 Email
               </label>
               <input
-                value={contact.email}
+                value={currentContact.email}
                 onChange={handleChangeContact}
                 type="email"
                 name="email"
@@ -118,7 +104,7 @@ const Contacts = () => {
                 Address
               </label>
               <textarea
-                value={contact.address}
+                value={currentContact.address}
                 onChange={handleChangeContact}
                 name="address"
                 id="address"
@@ -140,13 +126,7 @@ const Contacts = () => {
           </div>
         </form>
       </Modal>
-      <ContactsTable
-        updateContact={updateContact}
-        handleChangeContact={handleChangeContact}
-        handleSubmit={handleSubmit}
-        editContact={editContact}
-        deleteContact={deleteContact}
-      />
+      <ContactsTable editContact={editContact} />
     </div>
   )
 }

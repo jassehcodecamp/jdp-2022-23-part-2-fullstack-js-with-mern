@@ -4,9 +4,13 @@ import { ContactContext } from "./ContactContextProvider"
 const Aside = () => {
   const { contacts } = React.useContext(ContactContext)
 
+  // Derived States
   const allContacts = contacts.length
+
   const favoriteContacts = contacts.filter((contact) => contact.favorite).length
+
   const family = contacts.filter((contact) => contact.group === "family").length
+
   const colleagues = contacts.filter(
     (contact) => contact.group === "colleague"
   ).length
