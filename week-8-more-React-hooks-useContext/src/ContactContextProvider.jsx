@@ -15,7 +15,7 @@ const ContactContextProvider = ({ children }) => {
   const [currentContact, setCurrentContact] = React.useState(INITIAL_CONTACT)
 
   // const [contacts, setContacts] = React.useState(fetchContacts)
-  const [contacts, setContacts] = useLocalStorage("key")
+  const [contacts, setContacts] = useLocalStorage("contacts")
 
   const createNewContact = (contact, callback) => {
     const id = crypto.randomUUID()
