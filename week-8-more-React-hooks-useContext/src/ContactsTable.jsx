@@ -7,8 +7,17 @@ const ContactsTable = ({ editContact }) => {
   const { contacts, deleteContact, currentContact, setCurrentContact } =
     React.useContext(ContactContext)
 
+  const [searchTerm, setSearchTerm] = React.useState("")
+  const [filteredContacts, setFilteredContacts] = React.useState(contacts)
   const [showDeleteDialog, setShowDeleteDialog] = React.useState(false)
 
+  React.useEffect(() => {
+    const filtered = contacts.filter((contact) =>
+      contact.name.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+
+    setFilteredContacts(filtered)
+  }, [searchTerm])
   return (
     <>
       <Modal
@@ -37,7 +46,19 @@ const ContactsTable = ({ editContact }) => {
           </button>
         </div>
       </Modal>
-      <div className="mt-8 bg-white">
+      <div className="mt-8">
+        <form action="">
+          <input
+            value={searchTerm}
+            onChange={(event) => setSearchTerm(event.target.value)}
+            type="text"
+            placeholder="Search Contact..."
+            className="py-3 px-5 border rounded"
+          />
+          {searchTerm}
+        </form>
+      </div>
+      <div className="mt-5 bg-white">
         <div className="shadow-md rounded-lg overflow-hidden">
           <table className="w-full">
             <thead className="uppercase text-sm font-medium text-gray-800 bg-gray-100">
@@ -51,7 +72,7 @@ const ContactsTable = ({ editContact }) => {
             </thead>
 
             <tbody className="text-gray-500 divide-y divide-gray-200 bg-white">
-              {!contacts.length && (
+              {!filteredContacts.length && (
                 <tr>
                   <td colSpan={5}>
                     <div className="py-16 px-10 text-gray-400 text-sm flex items-center justify-center">
@@ -60,7 +81,7 @@ const ContactsTable = ({ editContact }) => {
                   </td>
                 </tr>
               )}
-              {contacts.map((contact, index) => {
+              {filteredContacts.map((contact, index) => {
                 return (
                   <tr key={contact.id}>
                     <td className="py-4 px-4">{contact.name}</td>
