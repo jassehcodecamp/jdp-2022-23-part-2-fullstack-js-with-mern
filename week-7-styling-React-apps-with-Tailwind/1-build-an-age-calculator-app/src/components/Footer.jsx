@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react"
 
 const Footer = () => {
   return (
@@ -13,7 +13,7 @@ const Footer = () => {
           Frontend Mentor
         </a>
       </p>
-      <p class="text-gray-500">
+      <p className="text-gray-500">
         &copy; JCC - Part 2 of the Junior Developer Program - 2022-23. All
         rights reserved.
       </p>

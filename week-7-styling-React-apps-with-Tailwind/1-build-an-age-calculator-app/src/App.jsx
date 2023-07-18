@@ -2,10 +2,10 @@ import { useState } from "react"
 import { intervalToDuration } from "date-fns"
 // import IconArrow from "./assets/icon-arrow.svg"
 
-import FormField from './components/FormField'
-import SubmitButton from './components/SubmitButton'
-import ResultItem from './components/ResultItem'
-import Footer from './components/Footer'
+import FormField from "./components/FormField"
+import SubmitButton from "./components/SubmitButton"
+import ResultItem from "./components/ResultItem"
+import Footer from "./components/Footer"
 
 const validDatesMapper = {
   1: 31,
@@ -95,7 +95,7 @@ function App() {
               value={day}
               setValue={setDay}
               errors={errors}
-              label="Day"
+              label="day"
               placeholder="DD"
             />
 
@@ -103,7 +103,7 @@ function App() {
               value={month}
               setValue={setMonth}
               errors={errors}
-              label="Month"
+              label="month"
               placeholder="MM"
             />
 
@@ -111,7 +111,7 @@ function App() {
               value={year}
               setValue={setYear}
               errors={errors}
-              label="Year"
+              label="year"
               placeholder="YYYY"
             />
           </div>

@@ -1,8 +1,7 @@
-import React, { useId } from 'react'
+import React, { useId } from "react"
 
-const FormField = ({ label, value, setValue, errors, placeholder = null}) => {
-  
-  const inputId = useId();
+const FormField = ({ label, value, setValue, errors, placeholder = null }) => {
+  const inputId = useId()
   // const inputId = label.toLowerCase().split(" ").join("-"); // Day => day, First Name => first-name
 
   return (
@@ -26,7 +25,7 @@ const FormField = ({ label, value, setValue, errors, placeholder = null}) => {
         placeholder={placeholder}
       />
       <span className="text-[#ff5757] mt-2 font-normal italic text-sm">
-        {errors && errors.day[0]}
+        {errors && errors[label][0]}
       </span>
     </div>
   )
