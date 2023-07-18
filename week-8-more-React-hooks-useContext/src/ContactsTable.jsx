@@ -11,13 +11,17 @@ const ContactsTable = ({ editContact }) => {
   const [filteredContacts, setFilteredContacts] = React.useState(contacts)
   const [showDeleteDialog, setShowDeleteDialog] = React.useState(false)
 
-  React.useEffect(() => {
+  const handleChange = (event) => {
+    const value = event.target.value
+    setSearchTerm(value)
+
     const filtered = contacts.filter((contact) =>
-      contact.name.toLowerCase().includes(searchTerm.toLowerCase())
+      contact.name.toLowerCase().includes(value.toLowerCase())
     )
 
     setFilteredContacts(filtered)
-  }, [searchTerm])
+  }
+
   return (
     <>
       <Modal
@@ -50,7 +54,7 @@ const ContactsTable = ({ editContact }) => {
         <form action="">
           <input
             value={searchTerm}
-            onChange={(event) => setSearchTerm(event.target.value)}
+            onChange={handleChange}
             type="text"
             placeholder="Search Contact..."
             className="py-3 px-5 border rounded"
