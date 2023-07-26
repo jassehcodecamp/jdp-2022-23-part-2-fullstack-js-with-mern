@@ -1,9 +1,45 @@
 import React from "react"
+import { ContactContext } from "./ContactContextProvider"
+import ContactDeleteDialog from "./ContactDeleteDialog"
 
-const ContactsTable = ({ contacts, deleteContact, editContact }) => {
+const ContactsTable = ({ setIsOpenContactForm }) => {
+  const { contacts, setCurrentContact } = React.useContext(ContactContext)
+
+  const [searchTerm, setSearchTerm] = React.useState("")
+
+  const filteredContacts = contacts.filter((contact) => {
+    const contactText = JSON.stringify(contact)
+    return contactText.toLowerCase().includes(searchTerm.toLowerCase())
+  })
+
+  const [showDeleteDialog, setShowDeleteDialog] = React.useState(false)
+
+  const editContact = (contactId) => {
+    const contact = contacts.find((contact) => contact.id === contactId)
+    setCurrentContact({ ...contact })
+    setIsOpenContactForm(true)
+  }
+
+  const handleChange = (event) => setSearchTerm(event.target.value)
+
   return (
     <>
-      <div className="mt-8 bg-white">
+      <ContactDeleteDialog
+        isOpen={showDeleteDialog}
+        setIsOpen={setShowDeleteDialog}
+      />
+      <div className="mt-8">
+        <form action="">
+          <input
+            value={searchTerm}
+            onChange={handleChange}
+            type="text"
+            placeholder="Search Contact..."
+            className="py-3 px-5 border rounded"
+          />
+        </form>
+      </div>
+      <div className="mt-5 bg-white">
         <div className="shadow-md rounded-lg overflow-hidden">
           <table className="w-full">
             <thead className="uppercase text-sm font-medium text-gray-800 bg-gray-100">
@@ -17,7 +53,7 @@ const ContactsTable = ({ contacts, deleteContact, editContact }) => {
             </thead>
 
             <tbody className="text-gray-500 divide-y divide-gray-200 bg-white">
-              {!contacts.length && (
+              {!filteredContacts.length && (
                 <tr>
                   <td colSpan={5}>
                     <div className="py-16 px-10 text-gray-400 text-sm flex items-center justify-center">
@@ -26,7 +62,7 @@ const ContactsTable = ({ contacts, deleteContact, editContact }) => {
                   </td>
                 </tr>
               )}
-              {contacts.map((contact, index) => {
+              {filteredContacts.map((contact) => {
                 return (
                   <tr key={contact.id}>
                     <td className="py-4 px-4">{contact.name}</td>
@@ -38,12 +74,15 @@ const ContactsTable = ({ contacts, deleteContact, editContact }) => {
                         <button
                           type="button"
                           className="text-blue-500"
-                          onClick={() => editContact(index)}
+                          onClick={() => editContact(contact.id)}
                         >
                           Edit
                         </button>
                         <button
-                          onClick={() => deleteContact(index)}
+                          onClick={() => {
+                            setShowDeleteDialog(true)
+                            setCurrentContact(contact)
+                          }}
                           type="button"
                           className="text-red-500"
                         >

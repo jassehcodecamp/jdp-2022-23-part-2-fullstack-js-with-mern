@@ -1,91 +1,31 @@
 import React from "react"
-import ContactsTable from "./ContactsTable"
 import Modal from "./Modal"
+import { ContactContext, INITIAL_CONTACT } from "./ContactContextProvider"
 
-const INITIAL_CONTACT = {
-  name: "",
-  email: "",
-  address: "",
-  phone: "",
-}
-const Contacts = ({ contacts, setContacts }) => {
-  const [isOpen, setIsOpen] = React.useState(false)
-
-  const [contact, setContact] = React.useState(INITIAL_CONTACT)
-
-  const editContact = (contactIndex) => {
-    // const contact = contacts.find((contact) => contact.id === contactId)
-    const nextContact = contacts[contactIndex]
-    setContact({ ...nextContact })
-    setIsOpen(true)
-  }
+const ContactForm = ({ isOpen, setIsOpen }) => {
+  const { createNewContact, updateContact, currentContact, setCurrentContact } =
+    React.useContext(ContactContext)
 
   const handleChangeContact = (event) => {
-    const nextContact = { ...contact }
+    const nextContact = { ...currentContact }
     nextContact[event.target.name] = event.target.value
 
-    setContact(nextContact)
+    setCurrentContact(nextContact)
   }
 
   const handleSubmit = (event) => {
     event.preventDefault()
-    if (contact.id) {
-      updateContact(contact.id, contact)
+    if (currentContact.id) {
+      updateContact(() => setIsOpen(false))
     } else {
-      createNewContact(contact)
+      createNewContact(() => setIsOpen(false))
     }
   }
 
-  const createNewContact = () => {
-    const id = crypto.randomUUID()
-    console.log(id)
-    const nextContacts = [...contacts]
-    nextContacts.unshift({ ...contact, id })
-
-    setContacts(nextContacts)
-    setIsOpen(false)
-  }
-  const updateContact = (id, contact) => {
-    const contactIndex = contacts.findIndex((contact) => contact.id === id)
-    let nextContacts = [...contacts]
-
-    // nextContacts.splice(contactIndex, 1, contact);
-
-    nextContacts[contactIndex] = contact
-
-    setContacts(nextContacts)
-    setIsOpen(false)
-  }
-
-  const deleteContact = (index) => {
-    // const nextContacts = [...contacts]
-    // nextContacts.splice(index, 1)
-
-    const nextContacts = contacts.filter(
-      (contact, contactIndex) => contactIndex !== index
-    )
-    setContacts(nextContacts)
-    setIsOpen(false)
-  }
-
-  const createContact = () => {
-    setContact(INITIAL_CONTACT)
-
-    setIsOpen(true)
-  }
   return (
     <div>
-      <div className="flex items-center justify-between">
-        <h2 className="uppercase">All Contacts</h2>
-        <button
-          onClick={createContact}
-          className="py-3 px-4 bg-indigo-700 text-white uppercase rounded"
-        >
-          New Contact
-        </button>
-      </div>
       <Modal
-        title={`${contact.id ? "Edit" : "Create"} Contact`}
+        title={`${currentContact.id ? "Edit" : "Create"} Contact`}
         isOpen={isOpen}
         setIsOpen={setIsOpen}
       >
@@ -99,7 +39,7 @@ const Contacts = ({ contacts, setContacts }) => {
                 type="text"
                 name="name"
                 id="name"
-                value={contact.name}
+                value={currentContact.name}
                 onChange={handleChangeContact}
                 className="block w-full border border-gray-400 rounded leading-7 py-2.5 px-4"
               />
@@ -109,7 +49,7 @@ const Contacts = ({ contacts, setContacts }) => {
                 Phone
               </label>
               <input
-                value={contact.phone}
+                value={currentContact.phone}
                 onChange={handleChangeContact}
                 type="text"
                 name="phone"
@@ -122,7 +62,7 @@ const Contacts = ({ contacts, setContacts }) => {
                 Email
               </label>
               <input
-                value={contact.email}
+                value={currentContact.email}
                 onChange={handleChangeContact}
                 type="email"
                 name="email"
@@ -135,7 +75,7 @@ const Contacts = ({ contacts, setContacts }) => {
                 Address
               </label>
               <textarea
-                value={contact.address}
+                value={currentContact.address}
                 onChange={handleChangeContact}
                 name="address"
                 id="address"
@@ -157,16 +97,8 @@ const Contacts = ({ contacts, setContacts }) => {
           </div>
         </form>
       </Modal>
-      <ContactsTable
-        contacts={contacts}
-        updateContact={updateContact}
-        handleChangeContact={handleChangeContact}
-        handleSubmit={handleSubmit}
-        editContact={editContact}
-        deleteContact={deleteContact}
-      />
     </div>
   )
 }
 
-export default Contacts
+export default ContactForm
