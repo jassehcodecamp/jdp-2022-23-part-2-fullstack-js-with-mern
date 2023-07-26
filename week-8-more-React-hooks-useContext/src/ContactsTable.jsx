@@ -1,11 +1,9 @@
 import React from "react"
 import { ContactContext } from "./ContactContextProvider"
-
-import Modal from "./Modal"
+import ContactDeleteDialog from "./ContactDeleteDialog"
 
 const ContactsTable = ({ setIsOpenContactForm }) => {
-  const { contacts, deleteContact, currentContact, setCurrentContact } =
-    React.useContext(ContactContext)
+  const { contacts, setCurrentContact } = React.useContext(ContactContext)
 
   const [searchTerm, setSearchTerm] = React.useState("")
 
@@ -26,32 +24,10 @@ const ContactsTable = ({ setIsOpenContactForm }) => {
 
   return (
     <>
-      <Modal
-        title="Delete Contact"
+      <ContactDeleteDialog
         isOpen={showDeleteDialog}
         setIsOpen={setShowDeleteDialog}
-      >
-        <p className="text-gray-500">
-          Are you sure you want to delete the Contact with name{" "}
-          <strong className="text-red-600 font-semibold">
-            {currentContact.name}
-          </strong>
-        </p>
-        <div className="mt-6 flex justify-end items-center gap-x-3">
-          <button
-            className="py-3 px-4 rounded text-gray-500 bg-gray-100"
-            onClick={() => setShowDeleteDialog(false)}
-          >
-            No, Cancel
-          </button>
-          <button
-            className="py-3 px-4 bg-red-100 text-red-500 rounded"
-            onClick={() => deleteContact(() => setShowDeleteDialog(false))}
-          >
-            Yes, Continue
-          </button>
-        </div>
-      </Modal>
+      />
       <div className="mt-8">
         <form action="">
           <input
@@ -61,7 +37,6 @@ const ContactsTable = ({ setIsOpenContactForm }) => {
             placeholder="Search Contact..."
             className="py-3 px-5 border rounded"
           />
-          {searchTerm}
         </form>
       </div>
       <div className="mt-5 bg-white">
