@@ -3,24 +3,26 @@ import { ContactContext } from "./ContactContextProvider"
 
 import Modal from "./Modal"
 
-const ContactsTable = ({ editContact }) => {
+const ContactsTable = ({ setIsOpenContactForm }) => {
   const { contacts, deleteContact, currentContact, setCurrentContact } =
     React.useContext(ContactContext)
 
   const [searchTerm, setSearchTerm] = React.useState("")
-  const [filteredContacts, setFilteredContacts] = React.useState(contacts)
+
+  const filteredContacts = contacts.filter((contact) => {
+    const contactText = JSON.stringify(contact)
+    return contactText.toLowerCase().includes(searchTerm.toLowerCase())
+  })
+
   const [showDeleteDialog, setShowDeleteDialog] = React.useState(false)
 
-  const handleChange = (event) => {
-    const value = event.target.value
-    setSearchTerm(value)
-
-    const filtered = contacts.filter((contact) =>
-      contact.name.toLowerCase().includes(value.toLowerCase())
-    )
-
-    setFilteredContacts(filtered)
+  const editContact = (contactId) => {
+    const contact = contacts.find((contact) => contact.id === contactId)
+    setCurrentContact({ ...contact })
+    setIsOpenContactForm(true)
   }
+
+  const handleChange = (event) => setSearchTerm(event.target.value)
 
   return (
     <>
@@ -85,7 +87,7 @@ const ContactsTable = ({ editContact }) => {
                   </td>
                 </tr>
               )}
-              {filteredContacts.map((contact, index) => {
+              {filteredContacts.map((contact) => {
                 return (
                   <tr key={contact.id}>
                     <td className="py-4 px-4">{contact.name}</td>
@@ -97,7 +99,7 @@ const ContactsTable = ({ editContact }) => {
                         <button
                           type="button"
                           className="text-blue-500"
-                          onClick={() => editContact(index)}
+                          onClick={() => editContact(contact.id)}
                         >
                           Edit
                         </button>

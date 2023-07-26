@@ -14,37 +14,36 @@ import useLocalStorage from "./hooks/use-local-storage"
 const ContactContextProvider = ({ children }) => {
   const [currentContact, setCurrentContact] = React.useState(INITIAL_CONTACT)
 
-  // const [contacts, setContacts] = React.useState(fetchContacts)
   const [contacts, setContacts] = useLocalStorage("contacts")
 
-  const createNewContact = (contact, callback) => {
+  const createNewContact = (callback = () => {}) => {
     const id = crypto.randomUUID()
     const nextContacts = [...contacts]
-    nextContacts.unshift({ ...contact, id })
+    nextContacts.unshift({ ...currentContact, id })
 
     setContacts(nextContacts)
     callback()
   }
 
-  const updateContact = (id, contact, callback) => {
-    const contactIndex = contacts.findIndex((contact) => contact.id === id)
+  const updateContact = (callback = () => {}) => {
+    const contactIndex = contacts.findIndex(
+      (contact) => contact.id === currentContact.id
+    )
     let nextContacts = [...contacts]
-    // nextContacts.splice(contactIndex, 1, contact);
 
-    nextContacts[contactIndex] = contact
+    nextContacts[contactIndex] = currentContact
 
     setContacts(nextContacts)
     callback()
   }
 
-  const deleteContact = (callback = null) => {
+  const deleteContact = (callback = () => {}) => {
     const nextContacts = contacts.filter(
       (contact) => contact.id !== currentContact.id
     )
     setContacts(nextContacts)
 
-    // callback?.()
-    if (callback) callback()
+    callback()
   }
   return (
     <ContactContext.Provider
