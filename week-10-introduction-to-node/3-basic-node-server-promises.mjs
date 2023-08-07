@@ -1,5 +1,4 @@
-const http = require("http")
-
+import http from "http"
 // console.log(http)
 
 const hostname = "localhost" // '127.0.0.1'
@@ -24,10 +23,6 @@ const server = http.createServer((request, response) => {
   response.end(
     'Sorry! The page you are looking was not found. Please go to home <a href="/">Home</a>'
   )
-})
-
-server.on("connection", () => {
-  console.log("New connection")
 })
 
 server.listen(port, hostname, () => {

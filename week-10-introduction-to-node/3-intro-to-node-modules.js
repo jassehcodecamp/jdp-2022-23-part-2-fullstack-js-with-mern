@@ -2,5 +2,11 @@
 
 // There are two different Module Systems in Node:
 
-// 1. Common JS: which uses module.exports to export values and the require() function import values from another module
+// 1. Common JS: which uses module.exports to export values and the require() function to import values from another module
 // 2. ES6 Modules (esm): which uses ES Module System - Import & Export
+
+// module.exports.course = "JDP Part 2"
+exports.course = "JDP Part 2"
+exports.sum = (a, b) => a + b
+
+console.log(module)

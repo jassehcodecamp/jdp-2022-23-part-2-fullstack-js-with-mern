@@ -13,6 +13,6 @@ console.log("directory path", __dirname)
 console.log("file path", __filename)
 
 // 5. exports: to share values (variables, and functions) in other parts/files in our program
-// 6. require: to have access values from other files/modules in our program
-// 7. module:  a global that represents the current file, which also gives us the option to export values from that file.
-// 8. import: An ES 6 feature called Modules, that allow us to import values from other files in our program.
+// 6. require: to have access to values from other files/modules in our program
+// 7. module:  a global variable that represents the current file, which also gives us the option to export values from that file.
+// 8. import: An ES6 feature called Modules, that allow us to import values from other files in our program.
