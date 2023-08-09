@@ -1,10 +1,14 @@
 # RESTful APIs/Services
 
-1. REST stands Representational State Transfer. It's a set of standards and principles of building backend APIs. 
+1. REST stands Representational State Transfer. It is a software architectural style with set of rules and principles for building APIs.
 
-2. In rest APIs clients requests and servers responses are typically in the JSON format.
+2. An API stands for Application Programming Interface. 
 
-3. Rest URLs/endpoints are typically called **resources**. They are usually named in the plural form 
+3. In rest APIs clients request data and servers response data are typically in the JSON format.
+
+4. JSON stands for JavaScript Object Notation.
+
+5. Rest URLs/endpoints are typically called **resources**. They are usually named in the plural form 
 
 Example of a typical REST URL:
 
