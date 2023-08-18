@@ -1,8 +1,9 @@
 import express from "express"
 import crypto from "crypto"
+import { contactValidationSchema } from "./validator.js"
 
 const app = express()
-const port = 3000
+const port = process.env.PORT || 3000
 
 app.use(express.json()) // for parsing application/json
 
@@ -57,11 +58,16 @@ app.get("/contacts/:id", (req, res) => {
 // Store a Contact
 app.post("/contacts", (req, res) => {
   // validate Contact data
-  const validatedData = validateContact(req.body)
-  if (!validatedData) {
+
+  const validatedData = contactValidationSchema.validate(req.body)
+  // { value: {}, error: '"username" is required' }
+
+  console.log(validatedData)
+  if (validatedData.error) {
     return res.status(422).json({
       status: "failure",
-      message: "The Name, Phone, and Email are required",
+      message: "The request has validation errors",
+      error: validatedData.error,
     })
   }
 
