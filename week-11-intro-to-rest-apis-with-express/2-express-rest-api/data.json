@@ -1,0 +1,17 @@
+[
+  {
+    "id": 1,
+    "name": "Omar Jasseh",
+    "email": "omar@jassehcodecamp.com",
+    "phone": 3100948,
+    "address": "Sanchaba"
+  },
+
+  {
+    "id": 2,
+    "name": "Buba Conteh",
+    "email": "buba@jassehcodecamp.com",
+    "phone": 3104015,
+    "address": "Bakoteh"
+  }
+]
