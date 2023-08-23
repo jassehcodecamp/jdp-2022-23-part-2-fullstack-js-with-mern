@@ -1,11 +1,13 @@
 import express from "express"
 import crypto from "crypto"
+import cors from "cors"
 import { contactValidationSchema } from "./validator.js"
 
 const app = express()
-const port = process.env.PORT || 3000
+const port = process.env.PORT || 5000
 
 app.use(express.json()) // for parsing application/json
+app.use(cors())
 
 const myMiddleware = (req, res, next) => {
   console.log("New request")
@@ -30,11 +32,21 @@ const contacts = [
     phone: 3104015,
     address: "Bakoteh",
   },
+
+  {
+    id: 3,
+    name: "Ahmad Jabbi",
+    email: "ahmad@jassehcodecamp.com",
+    phone: 3104010,
+    address: "Busumbala",
+  },
 ]
 
 // Route for our Homepage
 app.get("/", (req, res) => {
-  res.send("Hello World!")
+  res.json({
+    message: "Welcome to the Phonebook API",
+  })
 })
 
 // Get all Contacts
@@ -71,7 +83,7 @@ app.post("/contacts", (req, res) => {
     })
   }
 
-  const contact = { ...validatedData, id: crypto.randomUUID() }
+  const contact = { ...validatedData.value, id: crypto.randomUUID() }
   contacts.push(contact)
   return res.status(201).json({
     status: "success",

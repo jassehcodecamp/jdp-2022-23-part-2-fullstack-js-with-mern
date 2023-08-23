@@ -1,4 +1,6 @@
 import React from "react"
+import axios from "axios"
+import { fetchContacts, storeContact } from "./services/api"
 
 export const ContactContext = React.createContext()
 
@@ -9,20 +11,35 @@ export const INITIAL_CONTACT = {
   phone: "",
 }
 
-import useLocalStorage from "./hooks/use-local-storage"
-
 const ContactContextProvider = ({ children }) => {
   const [currentContact, setCurrentContact] = React.useState(INITIAL_CONTACT)
 
-  const [contacts, setContacts] = useLocalStorage("contacts")
+  const [contacts, setContacts] = React.useState([])
+
+  React.useEffect(() => {
+    getContacts()
+  }, [])
+
+  const getContacts = () =>
+    fetchContacts().then(({ data }) => setContacts(data))
 
   const createNewContact = (callback = () => {}) => {
     const id = crypto.randomUUID()
     const nextContacts = [...contacts]
     nextContacts.unshift({ ...currentContact, id })
 
-    setContacts(nextContacts)
-    callback()
+    // setContacts(nextContacts)
+    // send api request to contacts api
+    storeContact(currentContact)
+      .then((response) => {
+        if (response.status == 201) {
+          getContacts()
+        }
+        callback()
+      })
+      .catch((error) => {
+        console.log(error)
+      })
   }
 
   const updateContact = (callback = () => {}) => {
