@@ -12,7 +12,9 @@
  - Read more about classes here at MDN: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes
 
  - Below is a demo Contact class that has a few fields with a save method, and a few instance methods and one static method
- 
+ - in the demo below, we also worked with the readFile and writeFile Callbacks API from Node File System (fs) API. You can read more about them below:
+    - https://nodejs.org/dist/latest-v18.x/docs/api/fs.html#fsreadfilepath-options-callback
+    - https://nodejs.org/dist/latest-v18.x/docs/api/fs.html#fswritefilefile-data-options-callback
 */
 
 import fs from "fs"
