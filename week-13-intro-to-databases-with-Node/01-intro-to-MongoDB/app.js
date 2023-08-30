@@ -1,20 +1,40 @@
-var express = require("express")
-var path = require("path")
-var cookieParser = require("cookie-parser")
-var logger = require("morgan")
+import express from "express"
+import mongoose from "mongoose"
+const { Schema } = mongoose
 
-var indexRouter = require("./routes/index")
-var usersRouter = require("./routes/users")
+const app = express()
 
-var app = express()
+try {
+  await mongoose.connect("mongodb://127.0.0.1:27017/phonebook_jdp_part_2_22_23")
+  console.log("Database successfully connected")
+} catch (error) {
+  console.log("There was an error in connecting to your Database!")
+}
 
-app.use(logger("dev"))
-app.use(express.json())
-app.use(express.urlencoded({ extended: false }))
-app.use(cookieParser())
-app.use(express.static(path.join(__dirname, "public")))
+const contactSchema = new Schema({
+  name: String,
+  phone: String,
+  email: String,
+})
 
-app.use("/", indexRouter)
-app.use("/users", usersRouter)
+const Contact = mongoose.model("Contact", contactSchema)
 
-module.exports = app
+app.get("/", (req, res) => {
+  res.send("Hello Express with MongoDB!")
+})
+
+app.get("/contacts/create", async (req, res) => {
+  const contact = new Contact({
+    name: "Ahmad",
+    phone: "3100948",
+    email: "ahmad@jassehcodecamp.com",
+  })
+
+  const result = await contact.save()
+
+  return res.json(result)
+})
+
+const port = process.env.PORT || 3000
+
+app.listen(port, () => console.log(`Listening on port ${port}`))
