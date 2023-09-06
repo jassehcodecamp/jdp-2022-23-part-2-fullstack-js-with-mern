@@ -3,8 +3,13 @@ import Modal from "./Modal"
 import { ContactContext, INITIAL_CONTACT } from "./ContactContextProvider"
 
 const ContactForm = ({ isOpen, setIsOpen }) => {
-  const { createNewContact, updateContact, currentContact, setCurrentContact } =
-    React.useContext(ContactContext)
+  const {
+    createNewContact,
+    updateContact,
+    currentContact,
+    setCurrentContact,
+    formErrors,
+  } = React.useContext(ContactContext)
 
   const handleChangeContact = (event) => {
     const nextContact = { ...currentContact }
@@ -15,7 +20,7 @@ const ContactForm = ({ isOpen, setIsOpen }) => {
 
   const handleSubmit = (event) => {
     event.preventDefault()
-    if (currentContact.id) {
+    if (currentContact._id) {
       updateContact(() => setIsOpen(false))
     } else {
       createNewContact(() => setIsOpen(false))
@@ -25,7 +30,7 @@ const ContactForm = ({ isOpen, setIsOpen }) => {
   return (
     <div>
       <Modal
-        title={`${currentContact.id ? "Edit" : "Create"} Contact`}
+        title={`${currentContact._id ? "Edit" : "Create"} Contact`}
         isOpen={isOpen}
         setIsOpen={setIsOpen}
       >
@@ -43,6 +48,11 @@ const ContactForm = ({ isOpen, setIsOpen }) => {
                 onChange={handleChangeContact}
                 className="block w-full border border-gray-400 rounded leading-7 py-2.5 px-4"
               />
+              {formErrors && formErrors.field === "name" && (
+                <span className="text-red-500 text-sm">
+                  {formErrors.message}
+                </span>
+              )}
             </div>
             <div>
               <label htmlFor="phone" className="block mb-1">

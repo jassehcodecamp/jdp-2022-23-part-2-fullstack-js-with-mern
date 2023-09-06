@@ -1,6 +1,11 @@
 import React from "react"
 import axios from "axios"
-import { fetchContacts, storeContact } from "./services/api"
+import {
+  fetchContacts,
+  storeContact,
+  updateContactApi,
+  deleteContactApi,
+} from "./services/api"
 
 export const ContactContext = React.createContext()
 
@@ -15,6 +20,7 @@ const ContactContextProvider = ({ children }) => {
   const [currentContact, setCurrentContact] = React.useState(INITIAL_CONTACT)
 
   const [contacts, setContacts] = React.useState([])
+  const [formErrors, setFormErrors] = React.useState(null)
 
   React.useEffect(() => {
     getContacts()
@@ -24,10 +30,6 @@ const ContactContextProvider = ({ children }) => {
     fetchContacts().then(({ data }) => setContacts(data))
 
   const createNewContact = (callback = () => {}) => {
-    const id = crypto.randomUUID()
-    const nextContacts = [...contacts]
-    nextContacts.unshift({ ...currentContact, id })
-
     // setContacts(nextContacts)
     // send api request to contacts api
     storeContact(currentContact)
@@ -38,29 +40,42 @@ const ContactContextProvider = ({ children }) => {
         callback()
       })
       .catch((error) => {
-        console.log(error)
+        console.log(error.response)
+        if (error.response.status == 422) {
+          let errors = error.response.data
+          setFormErrors({
+            field: errors.error.details[0].context.label,
+            message: errors.error.details[0].message.split('"').join(""),
+          })
+        }
       })
   }
 
-  const updateContact = (callback = () => {}) => {
-    const contactIndex = contacts.findIndex(
-      (contact) => contact.id === currentContact.id
-    )
-    let nextContacts = [...contacts]
-
-    nextContacts[contactIndex] = currentContact
-
-    setContacts(nextContacts)
-    callback()
+  const updateContact = async (callback = () => {}) => {
+    const result = await updateContactApi(currentContact._id, currentContact)
+    console.log(result)
+    if (result.status == 200) {
+      /* 
+        let result = await fetchContacts();
+        let nextContacts = result.data;
+      */
+      let { data: nextContacts } = await fetchContacts()
+      setContacts(nextContacts)
+      callback()
+    }
   }
 
-  const deleteContact = (callback = () => {}) => {
-    const nextContacts = contacts.filter(
-      (contact) => contact.id !== currentContact.id
-    )
-    setContacts(nextContacts)
-
-    callback()
+  const deleteContact = async (callback = () => {}) => {
+    try {
+      const result = await deleteContactApi(currentContact._id)
+      if (result.status == 204) {
+        let { data: nextContacts } = await fetchContacts()
+        setContacts(nextContacts)
+        callback()
+      }
+    } catch (error) {
+      alert("There was an error in deleting the contact")
+    }
   }
   return (
     <ContactContext.Provider
@@ -72,6 +87,8 @@ const ContactContextProvider = ({ children }) => {
         createNewContact,
         updateContact,
         deleteContact,
+        formErrors,
+        setFormErrors,
       }}
     >
       {children}

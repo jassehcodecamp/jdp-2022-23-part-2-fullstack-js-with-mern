@@ -1,7 +1,17 @@
 import express from "express"
-import crypto from "crypto"
 import cors from "cors"
 import { contactValidationSchema } from "./validator.js"
+import mongoose from "mongoose"
+import { Schema } from "mongoose"
+
+const contactSchema = new Schema({
+  name: String,
+  phone: String,
+  email: String,
+  address: String,
+})
+
+const Contact = mongoose.model("Contact", contactSchema)
 
 const app = express()
 const port = process.env.PORT || 5000
@@ -16,31 +26,13 @@ const myMiddleware = (req, res, next) => {
 }
 
 app.use(myMiddleware)
-const contacts = [
-  {
-    id: 1,
-    name: "Omar Jasseh",
-    email: "omar@jassehcodecamp.com",
-    phone: 3100948,
-    address: "Sanchaba",
-  },
 
-  {
-    id: 2,
-    name: "Buba Conteh",
-    email: "buba@jassehcodecamp.com",
-    phone: 3104015,
-    address: "Bakoteh",
-  },
-
-  {
-    id: 3,
-    name: "Ahmad Jabbi",
-    email: "ahmad@jassehcodecamp.com",
-    phone: 3104010,
-    address: "Busumbala",
-  },
-]
+try {
+  await mongoose.connect("mongodb://127.0.0.1:27017/phonebook_jdp_part_2_22_23")
+  console.log("Database successfully connected")
+} catch (error) {
+  console.log("There was an error in connecting to your Database!")
+}
 
 // Route for our Homepage
 app.get("/", (req, res) => {
@@ -50,13 +42,15 @@ app.get("/", (req, res) => {
 })
 
 // Get all Contacts
-app.get("/contacts", (req, res) => {
+app.get("/contacts", async (req, res) => {
+  // fetch all contacts
+  const contacts = await Contact.find()
   res.json(contacts)
 })
 
 // Get a single Contact through a Route Parameter
-app.get("/contacts/:id", (req, res) => {
-  const contact = findContact(req.params.id, res)
+app.get("/contacts/:id", async (req, res) => {
+  const contact = await Contact.findById(req.params.id)
 
   if (!contact) {
     return res.status(404).json({
@@ -68,7 +62,7 @@ app.get("/contacts/:id", (req, res) => {
 })
 
 // Store a Contact
-app.post("/contacts", (req, res) => {
+app.post("/contacts", async (req, res) => {
   // validate Contact data
 
   const validatedData = contactValidationSchema.validate(req.body)
@@ -83,8 +77,8 @@ app.post("/contacts", (req, res) => {
     })
   }
 
-  const contact = { ...validatedData.value, id: crypto.randomUUID() }
-  contacts.push(contact)
+  const contact = new Contact({ ...validatedData.value })
+  await contact.save()
   return res.status(201).json({
     status: "success",
     message: "Contact created successfully",
@@ -93,9 +87,9 @@ app.post("/contacts", (req, res) => {
 })
 
 // Update a Contact
-app.patch("/contacts/:id", (req, res) => {
+app.patch("/contacts/:id", async (req, res) => {
   // Find Contact
-  const contact = findContact(req.params.id, res)
+  const contact = await Contact.find({ _id: req.params.id })
 
   if (!contact) {
     return res.status(404).json({
@@ -104,7 +98,7 @@ app.patch("/contacts/:id", (req, res) => {
     })
   }
   // Validate Contact data
-  const validatedData = validateContact(req.body, res)
+  const validatedData = contactValidationSchema.validate(req.body)
 
   if (!validatedData) {
     return res.status(422).json({
@@ -113,23 +107,20 @@ app.patch("/contacts/:id", (req, res) => {
     })
   }
 
-  const { name, phone, email, address } = validatedData
+  const contactToUpdate = validatedData.value
   // Update Contact
-  contact.name = name
-  contact.phone = phone
-  contact.email = email
-  contact.address = address
+  console.log({ contactToUpdate }, validatedData)
+  await Contact.updateOne({ _id: req.params.id }, contactToUpdate)
 
   return res.status(200).json({
     status: "success",
     message: "Contact updated successfully",
-    contact: contact,
   })
 })
 
 // Delete Contact
-app.delete("/contacts/:id", (req, res) => {
-  const contact = findContact(req.params.id)
+app.delete("/contacts/:id", async (req, res) => {
+  const contact = await Contact.findById(req.params.id)
   if (!contact) {
     return res.status(404).json({
       status: "failure",
@@ -137,23 +128,19 @@ app.delete("/contacts/:id", (req, res) => {
     })
   }
 
-  const contactIndex = contacts.indexOf(contact)
-  contacts.splice(contactIndex, 1)
-
-  res.status(204).end()
+  try {
+    await Contact.deleteOne({ _id: req.params.id })
+    res.status(204).end()
+  } catch (error) {
+    res.status(500).json({
+      status: "failure",
+      message: "There was an error in processing your request",
+    })
+  }
 })
 
 function findContact(contactId, res) {
   return contacts.find((c) => c.id == contactId)
-}
-
-function validateContact(contact) {
-  const { name, phone, email } = contact
-  if (!name || !phone || !email) {
-    return false
-  }
-
-  return contact
 }
 
 app.listen(port, () => {

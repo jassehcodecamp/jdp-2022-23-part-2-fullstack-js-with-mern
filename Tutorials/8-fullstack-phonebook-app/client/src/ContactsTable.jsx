@@ -1,6 +1,7 @@
 import React from "react"
 import { ContactContext } from "./ContactContextProvider"
 import ContactDeleteDialog from "./ContactDeleteDialog"
+import { fetchContact } from "./services/api"
 
 const ContactsTable = ({ setIsOpenContactForm }) => {
   const { contacts, setCurrentContact } = React.useContext(ContactContext)
@@ -14,8 +15,11 @@ const ContactsTable = ({ setIsOpenContactForm }) => {
 
   const [showDeleteDialog, setShowDeleteDialog] = React.useState(false)
 
-  const editContact = (contactId) => {
-    const contact = contacts.find((contact) => contact.id === contactId)
+  const editContact = async (contactId) => {
+    // const contact = contacts.find((contact) => contact._id === contactId)
+    const result = await fetchContact(contactId)
+    const contact = result.data
+    console.log(contact)
     setCurrentContact({ ...contact })
     setIsOpenContactForm(true)
   }
@@ -64,7 +68,7 @@ const ContactsTable = ({ setIsOpenContactForm }) => {
               )}
               {filteredContacts.map((contact) => {
                 return (
-                  <tr key={contact.id}>
+                  <tr key={contact._id}>
                     <td className="py-4 px-4">{contact.name}</td>
                     <td className="py-4 px-4">{contact.phone}</td>
                     <td className="py-4 px-4">{contact.email}</td>
@@ -74,7 +78,7 @@ const ContactsTable = ({ setIsOpenContactForm }) => {
                         <button
                           type="button"
                           className="text-blue-500"
-                          onClick={() => editContact(contact.id)}
+                          onClick={() => editContact(contact._id)}
                         >
                           Edit
                         </button>
